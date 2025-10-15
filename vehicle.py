@@ -1,53 +1,49 @@
 import keyboard
-import numpy as np
 import math
 from numba import jit
-from vehicle_visual import car_visual
 from vehicle_visual import degreeToRadians
 
     
-    
-@jit
-def getFrontRadius(bar_length, wheel_alignment):
-    return bar_length / math.sin(degreeToRadians(wheel_alignment))
 
-@jit
-def getBackRadius(bar_length, wheel_alignment):
-    return bar_length * math.cos(degreeToRadians(wheel_alignment))
+class car_kinematic:
+    def __init__(self, bar_length):
+        self.bar_length = bar_length
 
-@jit
-def getDistanceAngle(bar_length, distance, wheel_alignment):
-    if wheel_alignment == 0:
-        distance_angle = 0
-    else:
-        radius_front = getFrontRadius(bar_length, wheel_alignment)
-        distance_angle = (distance * 180) / (math.pi * radius_front)
-    return distance_angle
+    def getFrontRadius(self, wheel_alignment):
+        return self.bar_length / math.sin(degreeToRadians(wheel_alignment))
 
-@jit
-def getFrontDeviation(bar_length, distance, wheel_alignment):
-    if wheel_alignment == 0:
-        front_deviation = distance
-    else:
-        alpha = 90 - 0.5*getDistanceAngle(bar_length, distance, wheel_alignment)
-        front_deviation = distance * math.cos(degreeToRadians( (90-alpha) + wheel_alignment))
-    return front_deviation
+    def getBackRadius(self, wheel_alignment):
+        return self.bar_length * math.cos(degreeToRadians(wheel_alignment))
 
-@jit
-def getRightDeviation(bar_length, distance, wheel_alignment):
-    if wheel_alignment == 0:
-        right_deviation = 0
-    else:
-        alpha = 90 - 0.5*getDistanceAngle(bar_length, distance, wheel_alignment)
-        right_deviation = distance * math.sin(degreeToRadians( (90-alpha) + wheel_alignment))
+    def getDistanceAngle(self, distance, wheel_alignment):
+        if wheel_alignment == 0:
+            distance_angle = 0
+        else:
+            radius_front = self.getFrontRadius(wheel_alignment)
+            distance_angle = (distance * 180) / (math.pi * radius_front)
+        return distance_angle
 
-    return right_deviation
+    def getFrontDeviation(self, distance, wheel_alignment):
+        if wheel_alignment == 0:
+            front_deviation = distance
+        else:
+            alpha = 90 - 0.5*self.getDistanceAngle(distance, wheel_alignment)
+            front_deviation = distance * math.cos(degreeToRadians( (90-alpha) + wheel_alignment))
+        return front_deviation
 
-@jit
-def getNewFrontPosition(current_front_x, current_front_y, current_alignment, front_deviation, right_deviation):
-    front_x = current_front_x + front_deviation * math.cos(degreeToRadians(current_alignment)) + right_deviation * math.sin(degreeToRadians(current_alignment))
-    front_y = current_front_y + front_deviation * math.sin(degreeToRadians(current_alignment)) - right_deviation * math.cos(degreeToRadians(current_alignment))
-    return front_x, front_y
+    def getRightDeviation(self, distance, wheel_alignment):
+        if wheel_alignment == 0:
+            right_deviation = 0
+        else:
+            alpha = 90 - 0.5*self.getDistanceAngle(distance, wheel_alignment)
+            right_deviation = distance * math.sin(degreeToRadians( (90-alpha) + wheel_alignment))
+
+        return right_deviation
+
+    def getNewFrontPosition(self, current_front_x, current_front_y, current_alignment, front_deviation, right_deviation):
+        front_x = current_front_x + front_deviation * math.cos(degreeToRadians(current_alignment)) + right_deviation * math.sin(degreeToRadians(current_alignment))
+        front_y = current_front_y + front_deviation * math.sin(degreeToRadians(current_alignment)) - right_deviation * math.cos(degreeToRadians(current_alignment))
+        return front_x, front_y
     
 class speed:
     def __init__(self):

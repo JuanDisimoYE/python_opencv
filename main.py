@@ -1,8 +1,5 @@
 import cv2
-from vehicle import getFrontDeviation
-from vehicle import getRightDeviation
-from vehicle import getDistanceAngle
-from vehicle import getNewFrontPosition
+from vehicle import car_kinematic
 from vehicle import speed
 from vehicle_visual import car_visual
 
@@ -12,10 +9,11 @@ from vehicle_visual import car_visual
 
 if __name__ == "__main__":
 
-    car = car_visual(200,100,40,20,2,1000,1000)
+    car_vis = car_visual(200,100,40,20,2,1000,1000)
+    bar_length = car_vis.getBarLength()
+    car_kin = car_kinematic(bar_length)
     car_speed = speed()
 
-    bar_length = car.getBarLength()
     wheel_alignment = 0
     bar_alignment = 0
     direction = 0
@@ -30,14 +28,14 @@ if __name__ == "__main__":
         wheel_alignment = car_speed.getWheelAlignment()
 
         if (old_alignment != wheel_alignment) or (direction):
-            deviation_front = getFrontDeviation(bar_length, direction, wheel_alignment)
-            deviation_right = getRightDeviation(bar_length, direction, wheel_alignment)
-            deviation_alignment = getDistanceAngle(bar_length, direction, wheel_alignment)
+            deviation_front = car_kin.getFrontDeviation(direction, wheel_alignment)
+            deviation_right = car_kin.getRightDeviation(direction, wheel_alignment)
+            deviation_alignment = car_kin.getDistanceAngle(direction, wheel_alignment)
 
-            front_x, front_y = getNewFrontPosition(front_x, front_y, bar_alignment, deviation_front, deviation_right)
+            front_x, front_y = car_kin.getNewFrontPosition(front_x, front_y, bar_alignment, deviation_front, deviation_right)
             bar_alignment = bar_alignment - deviation_alignment
 
-            img = car.getImage(-wheel_alignment, front_x, front_y, bar_alignment)
+            img = car_vis.getImage(-wheel_alignment, front_x, front_y, bar_alignment)
             cv2.imshow("image", img)
 
 
