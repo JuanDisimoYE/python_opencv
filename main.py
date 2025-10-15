@@ -1,45 +1,47 @@
 import cv2
-import time
+from vehicle import getFrontDeviation
+from vehicle import getRightDeviation
+from vehicle import getDistanceAngle
+from vehicle import getNewFrontPosition
+from vehicle import speed
+from vehicle_visual import car_visual
 
 
-def main():
 
-    # blue_index = 0
-    # timestamp = time.time()
-    img = cv2.imread("images/blank.png", 1)
-    print(type(img))
 
-    # while blue_index < 255:
 
-    #     if (time.time() - timestamp) >= 0.1:
-    #         img_with_line = cv2.line(img.copy(), (0,0), (200,200), (blue_index,0,0), 10)
-    #         cv2.imshow("image", img_with_line)
-    #         timestamp = time.time()
-    #         blue_index = blue_index + 1
-    #         print(blue_index)
-    #         cv2.waitKey(1)
+if __name__ == "__main__":
 
-    for blue_index in range(0, 255):
-        img_with_line = cv2.line(img.copy(), (0,0), (200,200), (blue_index,0,0), 10)
-        cv2.imshow("image", img_with_line)
-        if cv2.waitKey(100) == 27: # 27 = ESC
-            print("animation skipped")
-            break
+    car = car_visual(200,100,40,20,2,1000,1000)
+    car_speed = speed()
 
-    print("wait for key")
-    cv2.waitKey(0)
+    bar_length = car.getBarLength()
+    wheel_alignment = 0
+    bar_alignment = 0
+    direction = 0
+    old_alignment = 1
+
+    front_x = 500
+    front_y = 500
+
+    while cv2.waitKey(10) != 27:
+        
+        direction = car_speed.getSpeed()
+        wheel_alignment = car_speed.getWheelAlignment()
+
+        if (old_alignment != wheel_alignment) or (direction):
+            deviation_front = getFrontDeviation(bar_length, direction, wheel_alignment)
+            deviation_right = getRightDeviation(bar_length, direction, wheel_alignment)
+            deviation_alignment = getDistanceAngle(bar_length, direction, wheel_alignment)
+
+            front_x, front_y = getNewFrontPosition(front_x, front_y, bar_alignment, deviation_front, deviation_right)
+            bar_alignment = bar_alignment - deviation_alignment
+
+            img = car.getImage(-wheel_alignment, front_x, front_y, bar_alignment)
+            cv2.imshow("image", img)
+
+
+        old_alignment = wheel_alignment
+
+
     cv2.destroyAllWindows()
-
-def experiemnt():
-    img = cv2.imread("images/blank.png", 1)
-    cv2.imshow("image", img)
-    if cv2.waitKey(0) == ord("w"):
-        print("w")
-    cv2.destroyAllWindows()
-
-
-
-if (__name__ == "__main__"):
-    # main()
-    experiemnt()
-
