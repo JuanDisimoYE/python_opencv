@@ -2,6 +2,7 @@ import cv2
 from vehicle import car_kinematic
 from vehicle import speed
 from vehicle_visual import car_visual
+from vehicle_visual import trailer_visual
 
 
 
@@ -13,6 +14,7 @@ if __name__ == "__main__":
     bar_length = car_vis.getBarLength()
     car_kin = car_kinematic(bar_length)
     car_speed = speed()
+    trailor_vis = trailer_visual(200, 100, 40, 20, 2)
 
     wheel_alignment = 0
     bar_alignment = 0
@@ -36,6 +38,7 @@ if __name__ == "__main__":
             bar_alignment = bar_alignment - deviation_alignment
 
             img = car_vis.getImage(-wheel_alignment, front_x, front_y, bar_alignment)
+            trailor_vis.getImage(img, 0, 400, 500, 0)
             cv2.imshow("image", img)
 
 
