@@ -6,6 +6,10 @@ from numba import jit
 @jit
 def degreeToRadians(degree):
     return (degree/180)*math.pi
+
+@jit
+def radiansToDegree(radians):
+    return (radians/math.pi)*180
     
 class speed:
     def __init__(self):
@@ -54,3 +58,28 @@ def getBorderedValue(value, max_velue):
     elif value < -max_velue:
         value = -max_velue
     return value
+
+# Math functions
+@jit
+def sin(degree):
+    return math.sin(degreeToRadians(degree))
+
+@jit
+def cos(degree):
+    return math.cos(degreeToRadians(degree))
+
+@jit
+def tan(degree):
+    return math.tan(degreeToRadians(degree))
+
+@jit
+def asin(gradient):
+    return radiansToDegree(math.asin(gradient))
+
+@jit
+def acos(gradient):
+    return radiansToDegree(math.acos(gradient))
+
+@jit
+def atan(gradient):
+    return radiansToDegree(math.atan(gradient))

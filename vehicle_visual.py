@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
-import math
-from numba import jit
+from SharedCalculation import sin, cos
 
 
 
@@ -12,10 +11,10 @@ class wheel_visual:
         self.line_width = line_width
 
     def draw(self, image, alignment, center_x, center_y):
-        length_offset_x = (self.length/2)*math.cos(degreeToRadians(alignment))
-        length_offset_y = (self.length/2)*math.sin(degreeToRadians(alignment))
-        width_offset_x = (self.width/2)*math.sin(degreeToRadians(alignment))
-        width_offset_y = (self.width/2)*math.cos(degreeToRadians(alignment))
+        length_offset_x = (self.length / 2) * cos(alignment)
+        length_offset_y = (self.length / 2) * sin(alignment)
+        width_offset_x = (self.width / 2) * sin(alignment)
+        width_offset_y = (self.width / 2) * cos(alignment)
 
         pA_x = int( center_x - length_offset_x - width_offset_x )
         pA_y = int( center_y - length_offset_y + width_offset_y )
@@ -37,13 +36,13 @@ class axle:
         self.width = width
 
     def getRightPoint(self, alignment, center_x, center_y):
-        pRight_x = int(center_x - ( self.width / 2) * math.sin(degreeToRadians(-alignment)))
-        pRight_y = int(center_y - ( self.width / 2) * math.cos(degreeToRadians(-alignment)))
+        pRight_x = int(center_x - (self.width / 2) * sin(-alignment))
+        pRight_y = int(center_y - (self.width / 2) * cos(-alignment))
         return pRight_x, pRight_y
     
     def getleftPoint(self, alignment, center_x, center_y):
-        pLeft_x = int(center_x + ( self.width / 2) * math.sin(degreeToRadians(-alignment)))
-        pLeft_y = int(center_y + ( self.width / 2) * math.cos(degreeToRadians(-alignment)))
+        pLeft_x = int(center_x + (self.width / 2) * sin(-alignment))
+        pLeft_y = int(center_y + (self.width / 2) * cos(-alignment))
         return pLeft_x, pLeft_y
 
 
@@ -55,11 +54,11 @@ class turntable_axis_visual:
     
     def draw(self, image, alignment, wheel_alignment, center_x, center_y):
         angle = -(alignment+wheel_alignment)
-        pRight_x = int(center_x - ( self.width / 2) * math.sin(degreeToRadians(angle)))
-        pRight_y = int(center_y - ( self.width / 2) * math.cos(degreeToRadians(angle)))
+        pRight_x = int(center_x - (self.width / 2) * sin(angle))
+        pRight_y = int(center_y - (self.width / 2) * cos(angle))
 
-        pLeft_x = int(center_x + ( self.width / 2) * math.sin(degreeToRadians(angle)))
-        pLeft_y = int(center_y + ( self.width / 2) * math.cos(degreeToRadians(angle)))
+        pLeft_x = int(center_x + (self.width / 2) * sin(angle))
+        pLeft_y = int(center_y + (self.width / 2) * cos(angle))
 
         cv2.line(image, (pRight_x,pRight_y), (pLeft_x,pLeft_y), (0,0,0), self.line_width)
 
@@ -114,8 +113,8 @@ class car_visual:
         image = np.ones((self.size_y, self.size_x, 3), dtype=np.uint8) * 255
 
         # middle bar
-        middle_bar_back_x = int(middle_bar_front_x - self.getBarLength() * math.cos(degreeToRadians(alignment_bar)))
-        middle_bar_back_y = int(middle_bar_front_y - self.getBarLength() * math.sin(degreeToRadians(alignment_bar)))
+        middle_bar_back_x = int(middle_bar_front_x - self.getBarLength() * cos(alignment_bar))
+        middle_bar_back_y = int(middle_bar_front_y - self.getBarLength() * sin(alignment_bar))
         cv2.line(image, (int(middle_bar_front_x),int(middle_bar_front_y)), (middle_bar_back_x,middle_bar_back_y), (0,0,0), self.line_width)
 
         # axles
@@ -138,8 +137,8 @@ class trailer_visual:
 
     def getImage(self, image, alignment_wheel, middle_bar_front_x, middle_bar_front_y, alignment_bar):
         # middle bar
-        middle_bar_back_x = int(middle_bar_front_x - self.getBarLength() * math.cos(degreeToRadians(alignment_bar)))
-        middle_bar_back_y = int(middle_bar_front_y - self.getBarLength() * math.sin(degreeToRadians(alignment_bar)))
+        middle_bar_back_x = int(middle_bar_front_x - self.getBarLength() * cos(alignment_bar))
+        middle_bar_back_y = int(middle_bar_front_y - self.getBarLength() * sin(alignment_bar))
         cv2.line(image, (int(middle_bar_front_x),int(middle_bar_front_y)), (middle_bar_back_x,middle_bar_back_y), (0,0,0), self.line_width)
 
         # axles
