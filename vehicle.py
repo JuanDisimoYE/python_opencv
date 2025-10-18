@@ -55,16 +55,17 @@ class speed:
 
     def getWheelAlignment(self):
         if keyboard.is_pressed('a'):
-            self.alignment = self.alignment + 2
-        if keyboard.is_pressed('d'):
             self.alignment = self.alignment - 2
-        return getBorderedValue(self.alignment, self.max_alignment)
+        if keyboard.is_pressed('d'):
+            self.alignment = self.alignment + 2
+        self.alignment = getBorderedValue(self.alignment, self.max_alignment)
+        return self.alignment
     
     def getSpeed(self):
         if keyboard.is_pressed('w') and not keyboard.is_pressed('s'):
-            direction = + 0.5
+            direction = + 2
         elif keyboard.is_pressed('s') and not keyboard.is_pressed('w'):
-            direction = - 0.5
+            direction = - 2
         else:
             direction = 0
 
@@ -79,8 +80,10 @@ class speed:
                 self.speed = self.speed + 0.3
                 if self.speed > 0:
                     self.speed = 0
+        
+        self.speed = getBorderedValue(self.speed, self.max_speed)
 
-        return getBorderedValue(self.speed, self.max_speed)
+        return self.speed
 
 @jit
 def getBorderedValue(value, max_velue):
