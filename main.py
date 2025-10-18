@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-from SharedCalculation import car_kinematic
 from SharedCalculation import speed
 from vehicle_visual import trailer_visual
 from car import car

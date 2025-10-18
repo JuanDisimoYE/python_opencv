@@ -3,7 +3,7 @@ import numpy as np
 import math
 from numba import jit
 
-from SharedCalculation import degreeToRadians
+from SharedCalculation import sin, cos
 
 from vehicle_visual import static_axle_visual
 from vehicle_visual import parallel_axle_visual
@@ -41,10 +41,7 @@ class car:
         return self.length - self.static_axle.wheel.length 
 
     def __getFrontRadius(self, wheel_alignment):
-        return self.getBarLength() / math.sin(degreeToRadians(wheel_alignment))
-
-    def __getBackRadius(self, wheel_alignment):
-        return self.getBarLength() * math.cos(degreeToRadians(wheel_alignment))
+        return self.getBarLength() / sin(wheel_alignment)
     
     def __getDistanceAngle(self, distance, wheel_alignment):
         if wheel_alignment == 0:
@@ -59,7 +56,7 @@ class car:
             front_deviation = distance
         else:
             alpha = 90 - 0.5*self.__getDistanceAngle(distance, wheel_alignment)
-            front_deviation = distance * math.cos(degreeToRadians( (90-alpha) + wheel_alignment))
+            front_deviation = distance * cos((90-alpha) + wheel_alignment)
         return front_deviation
     
     def __getRightDeviation(self, distance, wheel_alignment):
@@ -67,16 +64,16 @@ class car:
             right_deviation = 0
         else:
             alpha = 90 - 0.5*self.__getDistanceAngle(distance, wheel_alignment)
-            right_deviation = distance * math.sin(degreeToRadians( (90-alpha) + wheel_alignment))
+            right_deviation = distance * sin((90-alpha) + wheel_alignment)
 
         return right_deviation
 
     def __getNewFrontPosition(self, current_alignment, front_deviation, right_deviation):
-        front_x = self.position_front[x] + front_deviation * math.cos(degreeToRadians(current_alignment)) - right_deviation * math.sin(degreeToRadians(current_alignment))
-        front_y = self.position_front[y] + front_deviation * math.sin(degreeToRadians(current_alignment)) + right_deviation * math.cos(degreeToRadians(current_alignment))
+        front_x = self.position_front[x] + front_deviation * cos(current_alignment) - right_deviation * sin(current_alignment)
+        front_y = self.position_front[y] + front_deviation * sin(current_alignment) + right_deviation * cos(current_alignment)
         return front_x, front_y
     
     def __getBackPosition(self):
-        back_x = self.position_front[x] - self.getBarLength() * math.cos(degreeToRadians(self.alignment))
-        back_y = self.position_front[y] - self.getBarLength() * math.sin(degreeToRadians(self.alignment))
+        back_x = self.position_front[x] - self.getBarLength() * cos(self.alignment)
+        back_y = self.position_front[y] - self.getBarLength() * sin(self.alignment)
         return back_x, back_y
