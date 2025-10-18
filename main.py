@@ -1,8 +1,10 @@
 import cv2
-from vehicle import car_kinematic
-from vehicle import speed
-from vehicle_visual import car_visual
+import numpy as np
+
+from SharedCalculation import car_kinematic
+from SharedCalculation import speed
 from vehicle_visual import trailer_visual
+from car import car
 
 
 
@@ -10,19 +12,16 @@ from vehicle_visual import trailer_visual
 
 if __name__ == "__main__":
 
-    car_vis = car_visual(200,100,40,20,2,1000,1000)
-    bar_length = car_vis.getBarLength()
-    car_kin = car_kinematic(bar_length)
+    tatal_car = car(200, 100, 40, 20, 2, 500, 500, 0)
     car_speed = speed()
     trailor_vis = trailer_visual(200, 100, 40, 20, 2)
 
+    image = np.ones((1000, 1000, 3), dtype=np.uint8) * 255
+
     wheel_alignment = 0
-    bar_alignment = 0
     direction = 0
     old_alignment = 1
 
-    front_x = 500
-    front_y = 500
 
     while cv2.waitKey(10) != 27:
         
@@ -30,16 +29,11 @@ if __name__ == "__main__":
         wheel_alignment = car_speed.getWheelAlignment()
 
         if (old_alignment != wheel_alignment) or (direction):
-            deviation_front = car_kin.getFrontDeviation(direction, wheel_alignment)
-            deviation_right = car_kin.getRightDeviation(direction, wheel_alignment)
-            deviation_alignment = car_kin.getDistanceAngle(direction, wheel_alignment)
+            image = np.ones((1000, 1000, 3), dtype=np.uint8) * 255
 
-            front_x, front_y = car_kin.getNewFrontPosition(front_x, front_y, bar_alignment, deviation_front, deviation_right)
-            bar_alignment = bar_alignment - deviation_alignment
+            tatal_car.draw(image, direction, wheel_alignment)
 
-            img = car_vis.getImage(-wheel_alignment, front_x, front_y, bar_alignment)
-            trailor_vis.getImage(img, 0, 400, 500, 0)
-            cv2.imshow("image", img)
+            cv2.imshow("other", image)
 
 
         old_alignment = wheel_alignment
