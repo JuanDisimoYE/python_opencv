@@ -3,7 +3,8 @@ import numpy as np
 import math
 from numba import jit
 
-from vehicle_visual import degreeToRadians
+from SharedCalculation import degreeToRadians
+
 from vehicle_visual import static_axle_visual
 from vehicle_visual import parallel_axle_visual
 

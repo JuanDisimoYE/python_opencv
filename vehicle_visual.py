@@ -5,10 +5,6 @@ from numba import jit
 
 
 
-@jit
-def degreeToRadians(degree):
-    return (degree/180)*math.pi
-
 class wheel_visual:
     def __init__(self, length, width, line_width):
         self.length = length
