@@ -4,6 +4,7 @@ import numpy as np
 from SharedCalculation import speed
 from vehicle_visual import trailer_visual
 from car import car
+from simple_trailor import simple_trailor
 
 
 
@@ -12,8 +13,9 @@ from car import car
 if __name__ == "__main__":
 
     tatal_car = car(200, 100, 40, 20, 2, 500, 500, 0)
+    trailor = simple_trailor(100, 100, 40, 20, 2, 300, 500, 0)
     car_speed = speed()
-    trailor_vis = trailer_visual(200, 100, 40, 20, 2)
+    # trailor_vis = trailer_visual(200, 100, 40, 20, 2)
 
     image = np.ones((1000, 1000, 3), dtype=np.uint8) * 255
 
@@ -31,6 +33,8 @@ if __name__ == "__main__":
             image = np.ones((1000, 1000, 3), dtype=np.uint8) * 255
 
             tatal_car.draw(image, direction, wheel_alignment)
+            back_x, back_y = tatal_car.getBackPosition()
+            trailor.draw(image, back_x, back_y)
 
             cv2.imshow("other", image)
 

@@ -38,7 +38,10 @@ class car:
         self.static_axle.draw(image, self.alignment, self.position_back[x], self.position_back[y])
 
     def getBarLength(self):
-        return self.length - self.static_axle.wheel.length 
+        return self.length - self.static_axle.wheel.length
+    
+    def getBackPosition(self):
+        return self.position_back
 
     def __getFrontRadius(self, wheel_alignment):
         return self.getBarLength() / sin(wheel_alignment)

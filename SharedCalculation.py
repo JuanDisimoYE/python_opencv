@@ -83,3 +83,11 @@ def acos(gradient):
 @jit
 def atan(gradient):
     return radiansToDegree(math.atan(gradient))
+
+
+# @jit
+def getDistance(Ax, Ay, Bx, By):
+    return math.sqrt( ((Ax - Bx)*(Ax - Bx)) + ((Ay - By)*(Ay - By)) )
+
+def pow2(number):
+    return number*number

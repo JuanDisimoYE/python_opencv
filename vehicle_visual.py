@@ -36,14 +36,14 @@ class axle:
         self.width = width
 
     def getRightPoint(self, alignment, center_x, center_y):
-        pRight_x = int(center_x - (self.width / 2) * sin(-alignment))
-        pRight_y = int(center_y - (self.width / 2) * cos(-alignment))
+        pRight_x = center_x - (self.width / 2) * sin(alignment)
+        pRight_y = center_y - (self.width / 2) * cos(alignment)
         return pRight_x, pRight_y
     
     def getleftPoint(self, alignment, center_x, center_y):
-        pLeft_x = int(center_x + (self.width / 2) * sin(-alignment))
-        pLeft_y = int(center_y + (self.width / 2) * cos(-alignment))
-        return pLeft_x, pLeft_y
+        pLeft_x = center_x + (self.width / 2) * sin(alignment)
+        pLeft_y = center_y + (self.width / 2) * cos(alignment)
+        return (pLeft_x), (pLeft_y)
 
 
 class turntable_axis_visual:
@@ -73,10 +73,15 @@ class static_axle_visual(axle):
         axle.__init__(self, self.width)
 
     def draw(self, image, alignment, center_x, center_y):
+        print(f"center_x = {center_x}")
+        print(f"center_y = {center_y}")
+        print(f"alignment = {alignment}")
         pRight_x, pRight_y = self.getRightPoint(alignment, center_x, center_y)
         pLeft_x, pLeft_y = self.getleftPoint(alignment, center_x, center_y)
+        print(f"pRight_x = {pRight_x}")
+        print(f"pRight_y = {pRight_y}")
 
-        cv2.line(image, (pRight_x,pRight_y), (pLeft_x,pLeft_y), (0,0,0), self.line_width)
+        cv2.line(image, (int(pRight_x),int(pRight_y)), (int(pLeft_x),int(pLeft_y)), (0,0,0), self.line_width)
         
         self.wheel.draw(image, alignment, pRight_x, pRight_y)
         self.wheel.draw(image, alignment, pLeft_x, pLeft_y)
@@ -93,7 +98,7 @@ class parallel_axle_visual(axle):
         pRight_x, pRight_y = self.getRightPoint(alignment, center_x, center_y)
         pLeft_x, pLeft_y = self.getleftPoint(alignment, center_x, center_y)
 
-        cv2.line(image, (pRight_x,pRight_y), (pLeft_x,pLeft_y), (0,0,0), self.line_width)
+        cv2.line(image, (int(pRight_x),int(pRight_y)), (int(pLeft_x),int(pLeft_y)), (0,0,0), self.line_width)
         
         self.wheel.draw(image, alignment + wheel_alignment, pRight_x, pRight_y)
         self.wheel.draw(image, alignment + wheel_alignment, pLeft_x, pLeft_y)
