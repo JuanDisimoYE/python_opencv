@@ -150,3 +150,6 @@ class trailer_visual:
     
     def getBarLength(self):
         return self.length - self.static_axle.wheel.length
+    
+def line(image, point1_x, point1_y, point2_x, point2_y, line_width):
+    return cv2.line(image, (int(point1_x),int(point1_y)), (int(point2_x),int(point2_y)), (0, 0, 0), line_width)

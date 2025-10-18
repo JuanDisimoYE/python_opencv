@@ -13,9 +13,11 @@ from simple_trailor import simple_trailor
 if __name__ == "__main__":
 
     tatal_car = car(200, 100, 40, 20, 2, 500, 500, 0)
-    trailor = simple_trailor(100, 100, 40, 20, 2, 300, 500, 0)
+    clutch_x, clutch_y = tatal_car.getBackPosition()
+    trailor = simple_trailor(100, 100, 40, 20, 2, clutch_x, clutch_y, 0)
+    clutch_x, clutch_y = trailor.getBackPosition()
+    sensond_trailor = simple_trailor(100, 100, 40, 20, 2, clutch_x, clutch_y, 0)
     car_speed = speed()
-    # trailor_vis = trailer_visual(200, 100, 40, 20, 2)
 
     image = np.ones((1000, 1000, 3), dtype=np.uint8) * 255
 
@@ -35,6 +37,8 @@ if __name__ == "__main__":
             tatal_car.draw(image, direction, wheel_alignment)
             back_x, back_y = tatal_car.getBackPosition()
             trailor.draw(image, back_x, back_y)
+            back_x, back_y = trailor.getBackPosition()
+            sensond_trailor.draw(image, back_x, back_y)
 
             cv2.imshow("other", image)
 

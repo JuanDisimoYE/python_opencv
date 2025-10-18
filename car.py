@@ -14,12 +14,12 @@ y = 1
 
 class car:
     def __init__(self, length, width, wheel_length, wheel_width, line_width, start_x, start_y, alignment_start):
-        self.length = length
+        self.bar_length = length - wheel_length
         self.width = width
         self.line_width = line_width
         self.position_front = (start_x, start_y)
         self.alignment = alignment_start
-        self.position_back = (0, 0)
+        self.position_back = (start_x - self.bar_length * cos(alignment_start), start_y - self.bar_length * sin(alignment_start))
         self.static_axle = static_axle_visual(width, wheel_length, wheel_width, line_width)
         self.parallel_axle = parallel_axle_visual(width, wheel_length, wheel_width, line_width)
 
@@ -38,7 +38,7 @@ class car:
         self.static_axle.draw(image, self.alignment, self.position_back[x], self.position_back[y])
 
     def getBarLength(self):
-        return self.length - self.static_axle.wheel.length
+        return self.bar_length
     
     def getBackPosition(self):
         return self.position_back
